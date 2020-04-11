@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:layout_margin="30dp"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/Information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="#DD2752"
+        android:text="after clicking these buttons you can see /perform different -2 activities" />
+
+
+    <Button
+        android:id="@+id/openNewIntent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Information"
+        android:layout_marginTop="30dp"
+        android:textAllCaps="false"
+        android:layout_marginBottom="10sp"
+        android:text="Open New Activity " />
+
+    <Button
+        android:id="@+id/openyesNOinten"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:layout_below="@+id/openNewIntent"
+        android:textAllCaps="false"
+        android:text="Open 2 different Acitivity" />
+
+
+    <Button
+        android:id="@+id/openReplyIntent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/openyesNOinten"
+        android:textAllCaps="false"
+        android:layout_marginBottom="10sp"
+        android:text="To make a inline reply like Whatsapp" />
+
+    <Button
+        android:id="@+id/ImageNotification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/openReplyIntent"
+        android:textAllCaps="false"
+        android:layout_marginBottom="10sp"
+        android:text="Image Notificaiton   " />
+
+    <Button
+        android:id="@+id/HeaderNOtification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:layout_below="@+id/ImageNotification"
+        android:textAllCaps="false"
+        android:text="Header (high priority) Notificaiton " />
+
+
+    <Button
+        android:id="@+id/expendNotificaiton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/HeaderNOtification"
+        android:layout_marginBottom="10sp"
+        android:textAllCaps="false"
+        android:text="To see expended messages" />
+
+</RelativeLayout>
