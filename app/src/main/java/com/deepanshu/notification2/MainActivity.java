@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static int NOTIFICATION_id = 001;
     public static final String TXT_reply = "text_reply";
     String replyLabel = "Enter your reply here";
+    int messageNO=0;
     private NotificationManager notifManager;
 
     private static final String TAG = "MainActivity";
@@ -63,9 +64,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Msg subscribe";
+                        String msg = "Msg general";
                         if (!task.isSuccessful()) {
-                            msg = "msg subscribe failed";
+                            msg = "msg general failed";
                         }
                         Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
@@ -129,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);//to cancep the message form above
         builder.setAutoCancel(true);
         builder.setContentIntent(landingPendingIntent);//to call other activity or simple click to enter into the other activity
-
         /*  // final NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);
         builder.setSmallIcon(R.drawable.ic_arrow_downward_black_24dp);
         builder.setContentTitle("Image download");
@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         builder.setLargeIcon(bitmap);
         builder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap).bigLargeIcon(null));*///for the image show in notification
         //builder.setStyle(new NotificationCompat.BigTextStyle().bigText(getString(R.string.Text)));
-
         //Create Notification.
         NotificationManager compat = (NotificationManager)
                 getSystemService(Context.NOTIFICATION_SERVICE);//NotificationManagerCompat.from(this);
@@ -207,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          setChannel(String channelId), so you can choose to set the notification channel id either in the
          constructor or using the setter method.
         */
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);//so we use construtor to setchannel
         builder.setSmallIcon(R.drawable.ic_sms_black_24dp);
         builder.setContentTitle("Yes No Notification");
         builder.setContentText("You will be enters into 2 different activities depends on your selection.... \"YES OR NO\"");
@@ -237,7 +236,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Initialise RemoteInput
             RemoteInput remoteInput = new RemoteInput.Builder(TXT_reply).setLabel(replyLabel).build();
             // b. Build your notification action
-
             Intent replyInten = new Intent(this, ReviewActivity.class);
             // replyInten.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent replyPendeingIntent = PendingIntent.getActivity(this, 0, replyInten, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -246,11 +244,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setAllowGeneratedReplies(true)
                     .build();
             builder.addAction(action);
+
+        }
+        else {
+            Intent LandingIntent = new Intent(this, LandingActivity.class);
+            PendingIntent landingPendingIntent = PendingIntent.getActivity(this, 0, LandingIntent, PendingIntent.FLAG_ONE_SHOT);
+            builder.setContentIntent(landingPendingIntent);//to call other activity or simple click to enter into the other activity
+            builder.setAutoCancel(true);
+
+        }
             NotificationManager compat = (NotificationManager)
                     getSystemService(Context.NOTIFICATION_SERVICE);//NotificationManagerCompat.from(this);
             compat.notify(NOTIFICATION_id, builder.build());
             builder.setAutoCancel(true);
-        }
+
     }
 
     /*
@@ -352,6 +359,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void createHeaderNotification(String aMessage) {
+        messageNO=messageNO+1;//to set the no of messsage received  icon
 
         final int NOTIFY_ID = 1002;
         // There are hardcoding only for show it's just strings
@@ -378,6 +386,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
                     .setTicker(aMessage)
+                    .setNumber(messageNO)
+                    .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)//Modify a notification's long-press menu icon
+
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
         } else {
         // else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -411,6 +422,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mChannel.setDescription(description);
             mChannel.enableVibration(true);
             mChannel.setLightColor(Color.GREEN);
+            mChannel.setShowBadge(true);//to see the notificaiton icon on the app
             mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             notifManager.createNotificationChannel(mChannel);
 
@@ -434,6 +446,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Sets whether notifications posted to this channel appear on the lockscreen or not
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         notificationChannel.setDescription(description);
+        notificationChannel.setShowBadge(false);
+
             /*NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);*///it can also be handle like this
         getManager().createNotificationChannel(notificationChannel);
