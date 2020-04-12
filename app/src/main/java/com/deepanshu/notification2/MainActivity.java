@@ -1,21 +1,17 @@
 package com.deepanshu.notification2;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,18 +25,17 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import static com.deepanshu.notification2.ChannelUtil.CreteNotificationChannel1;
+import static com.deepanshu.notification2.ChannelUtil.createSimpleNOtificationChannel;
+import static com.deepanshu.notification2.StaticValue.HIGH_PRIORITY_CHANNEL_ID;
+import static com.deepanshu.notification2.StaticValue.NOTIFICATION;
+import static com.deepanshu.notification2.StaticValue.NOTIFICATION_id;
+import static com.deepanshu.notification2.StaticValue.TXT_reply;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     Button openReplyIntent, openYesNoIntent, openotherActivity,imageNoti,headerNOti,expendedNoti;
-    private NotificationManager mManager;
-    private final String Channel_id = "Notification";
-    String id = "my_package_channel_1"; // The user-visible name of the channel.
-
-    public static int NOTIFICATION_id = 001;
-    public static final String TXT_reply = "text_reply";
-    String replyLabel = "Enter your reply here";
     int messageNO=0;
     private NotificationManager notifManager;
-
     private static final String TAG = "MainActivity";
 
     @Override
@@ -81,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.w(TAG, "getInstanceId failed", task.getException());
                             return;
                         }
-
                         // Get new Instance ID token
                         String token = task.getResult().getToken();
                         // Log and toast
@@ -92,42 +86,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.openyesNOinten:
-                dispalayNotificatonForYesNO(v);
-                break;
-            case R.id.openNewIntent:
-                dispalayNotificatonSimple(v);
-                break;
-            case R.id.openReplyIntent:
-                dispalayNotificatonForReply(v);
-                break;
-            case R.id.ImageNotification:
-                CreateImageNotification();
-                break;
-            case R.id.expendNotificaiton:
-                ExpendedContentArea();
-                break;
-            case R.id.HeaderNOtification:
-                createHeaderNotification("High priority message");
-                break;
-        }
-    }
-
     public void dispalayNotificatonSimple(View View) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNOtificationChannerl();
+            createSimpleNOtificationChannel(this);
         }
         Intent LandingIntent = new Intent(this, LandingActivity.class);
         // LandingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent landingPendingIntent = PendingIntent.getActivity(this, 0, LandingIntent, PendingIntent.FLAG_ONE_SHOT);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION);
         builder.setSmallIcon(R.drawable.ic_sms_black_24dp);
         builder.setContentTitle("Simple Notification");
         builder.setContentText("this is a simple notification..");
-        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);//to cancep the message form above
+        builder.setPriority(NotificationCompat.PRIORITY_DEFAULT);//to cancel the message form above
         builder.setAutoCancel(true);
         builder.setContentIntent(landingPendingIntent);//to call other activity or simple click to enter into the other activity
         /*  // final NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);
@@ -190,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void dispalayNotificatonForYesNO(View View) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNOtificationChannerl();
+            createSimpleNOtificationChannel(this);
         }
 
         Intent yesIntent = new Intent(this, YesActivity.class);
@@ -206,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          setChannel(String channelId), so you can choose to set the notification channel id either in the
          constructor or using the setter method.
         */
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);//so we use construtor to setchannel
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION);//so we use construtor to setchannel
         builder.setSmallIcon(R.drawable.ic_sms_black_24dp);
         builder.setContentTitle("Yes No Notification");
         builder.setContentText("You will be enters into 2 different activities depends on your selection.... \"YES OR NO\"");
@@ -223,9 +193,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void dispalayNotificatonForReply(View v) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNOtificationChannerl();
+            createSimpleNOtificationChannel(this);
         }
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION);
         builder.setSmallIcon(R.drawable.ic_sms_black_24dp);
         builder.setContentTitle("Important Message");
         builder.setContentText("this is an important message please reply me  ..");
@@ -311,13 +281,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }*/
     public void CreateImageNotification() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNOtificationChannerl();
+            createSimpleNOtificationChannel(this);
         }
         Intent LandingIntent = new Intent(this, LandingActivity.class);
         // LandingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent landingPendingIntent = PendingIntent.getActivity(this, 0, LandingIntent, PendingIntent.FLAG_ONE_SHOT);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.google1);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION);
         builder.setSmallIcon(R.drawable.ic_sms_black_24dp)
                 .setContentTitle("Image View in Notification")
                 .setContentText("this is our Image view Notification")
@@ -330,19 +300,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 getSystemService(Context.NOTIFICATION_SERVICE);//NotificationManagerCompat.from(this);
         compat.notify(NOTIFICATION_id, builder.build());
         builder.setAutoCancel(true);
-
     }
 
     public void ExpendedContentArea() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createNOtificationChannerl();
+            createSimpleNOtificationChannel(this);
         }
         String bigtextmsg = "this is our big text message here we use this content to show some information to our user with in the notificiaton";
         Intent LandingIntent = new Intent(this, LandingActivity.class);
         // LandingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent landingPendingIntent = PendingIntent.getActivity(this, 0, LandingIntent, PendingIntent.FLAG_ONE_SHOT);
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.google1);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, Channel_id);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION);
         builder.setSmallIcon(R.drawable.ic_sms_black_24dp)
                 .setContentTitle("Expend view Notification")
                 .setContentText("please expends thus to see full notification")
@@ -355,50 +324,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 getSystemService(Context.NOTIFICATION_SERVICE);//NotificationManagerCompat.from(this);
         compat.notify(NOTIFICATION_id, builder.build());
         builder.setAutoCancel(true);
-
     }
 
     public void createHeaderNotification(String aMessage) {
-        messageNO=messageNO+1;//to set the no of messsage received  icon
-
-        final int NOTIFY_ID = 1002;
+        messageNO = messageNO + 1;//to set the no of messsage received  icon
         // There are hardcoding only for show it's just strings
         Intent intent;
         PendingIntent pendingIntent;
         NotificationCompat.Builder builder;
-        if (notifManager == null) {
+        if (notifManager == null) {//notifymanager ko agge likho ya bad me bat ek hi h
             notifManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CreteNotificationChannel1();
-            builder = new NotificationCompat.Builder(this, id);
-
+            CreteNotificationChannel1(this);
+        }
+        builder = new NotificationCompat.Builder(this, HIGH_PRIORITY_CHANNEL_ID);//HIGH_PRIORITY_CHANNEL_ID ka koe lena dena nahi h less than 0reao se
+        intent = new Intent(this, MainActivity.class);
+        // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        builder.setContentTitle(aMessage)
+                .setSmallIcon(android.R.drawable.ic_popup_reminder)
+                .setContentText(this.getString(R.string.app_name))
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setTicker(aMessage)
+                .setNumber(messageNO)
+                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)//Modify a notification's long-press menu icon
+                .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+       /* } else {
+        // else if (!Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new NotificationCompat.Builder(this,"");//eska channel id se koe lena dena nahi h
             intent = new Intent(this, MainActivity.class);
-            // intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-
-            builder.setContentTitle(aMessage)  // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder) // required
-                    .setContentText(this.getString(R.string.app_name))  // required
-                    .setDefaults(Notification.DEFAULT_ALL)
-                    .setAutoCancel(true)
-                    .setContentIntent(pendingIntent)
-                    .setTicker(aMessage)
-                    .setNumber(messageNO)
-                    .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)//Modify a notification's long-press menu icon
-
-                    .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-        } else {
-        // else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            builder = new NotificationCompat.Builder(this,"");//eska chanekl id se koe lena dena nahi h
-            intent = new Intent(this, MainActivity.class);
-            //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-            builder.setContentTitle(aMessage)                           // required
-                    .setSmallIcon(android.R.drawable.ic_popup_reminder) // required
-                    .setContentText(this.getString(R.string.app_name))  // required
+            builder.setContentTitle(aMessage)
+                    .setSmallIcon(android.R.drawable.ic_popup_reminder)
+                    .setContentText(this.getString(R.string.app_name))
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)
@@ -406,60 +368,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setVibrate(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400})
                     .setPriority(Notification.PRIORITY_HIGH);
         }
-
+        */
         Notification notification = builder.build();
-        notifManager.notify(NOTIFY_ID, notification);
+        notifManager.notify(NOTIFICATION_id, notification);
+
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void CreteNotificationChannel1() {
-        String name = "my_package_channel";
-        String description = "my_package_first_channel"; // The user-visible description of the channel.
-        int importance = NotificationManager.IMPORTANCE_HIGH;
-        NotificationChannel mChannel = notifManager.getNotificationChannel(id);
-        if (mChannel == null) {
-            mChannel = new NotificationChannel(id, name, importance);
-            mChannel.setDescription(description);
-            mChannel.enableVibration(true);
-            mChannel.setLightColor(Color.GREEN);
-            mChannel.setShowBadge(true);//to see the notificaiton icon on the app
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-            notifManager.createNotificationChannel(mChannel);
-
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.openyesNOinten:
+                dispalayNotificatonForYesNO(v);
+                break;
+            case R.id.openNewIntent:
+                dispalayNotificatonSimple(v);
+                break;
+            case R.id.openReplyIntent:
+                dispalayNotificatonForReply(v);
+                break;
+            case R.id.ImageNotification:
+                CreateImageNotification();
+                break;
+            case R.id.expendNotificaiton:
+                ExpendedContentArea();
+                break;
+            case R.id.HeaderNOtification:
+                createHeaderNotification("High priority message");
+                break;
         }
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void createNOtificationChannerl() {
-        CharSequence name = "Personal NOtification";
-        String description = "include allthe personal notification";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        //create notification nchannel
-        NotificationChannel notificationChannel = new NotificationChannel(Channel_id, name, importance);
-        // Sets whether notifications posted to this channel should display notification lights
-        notificationChannel.enableLights(true);
-        // Sets whether notification posted to this channel should vibrate.
-        notificationChannel.enableVibration(true);
-        // Sets the notification light color for notifications posted to this channel
-        notificationChannel.setLightColor(Color.GREEN);
-        // Sets whether notifications posted to this channel appear on the lockscreen or not
-        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-        notificationChannel.setDescription(description);
-        notificationChannel.setShowBadge(false);
-
-            /*NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(notificationChannel);*///it can also be handle like this
-        getManager().createNotificationChannel(notificationChannel);
-
-    }
-
-    private NotificationManager getManager() {
-        if (mManager == null) {
-            mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        }
-        return mManager;
-
     }
 
 
