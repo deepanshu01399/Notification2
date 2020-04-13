@@ -1,6 +1,7 @@
 package com.deepanshu.notification2;
 
 public class StaticValue {
+
     public final static  String HIGH_PRIORITY_CHANNEL_ID = "HighPriority";
     public final static  String NOTIFICATION = "Notification";
     public final static int NOTIFICATION_id = 001;
