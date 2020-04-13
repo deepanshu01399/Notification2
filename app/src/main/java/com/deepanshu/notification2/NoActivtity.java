@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.deepanshu.notification2.StaticValue.NOTIFICATION_id;
+
 public class NoActivtity extends AppCompatActivity {
 
     @Override
@@ -12,7 +14,7 @@ public class NoActivtity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_no_activtity);
         NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(MainActivity.NOTIFICATION_id);
+        notificationManager.cancel(NOTIFICATION_id);
 
     }
 }

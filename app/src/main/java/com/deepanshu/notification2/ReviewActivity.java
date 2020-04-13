@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.deepanshu.notification2.StaticValue.NOTIFICATION_id;
+import static com.deepanshu.notification2.StaticValue.TXT_reply;
+
 public class ReviewActivity extends AppCompatActivity {
 private TextView textView;
     @Override
@@ -16,10 +19,10 @@ private TextView textView;
         textView=findViewById(R.id.texview);
         Bundle remoteReply= RemoteInput.getResultsFromIntent(getIntent());
         if(remoteReply!=null){
-            String message=remoteReply.getCharSequence(MainActivity.TXT_reply).toString();
+            String message=remoteReply.getCharSequence(TXT_reply).toString();
             textView.setText(message);
         }
         NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(MainActivity.NOTIFICATION_id);
+        notificationManager.cancel(NOTIFICATION_id);
     }
 }
